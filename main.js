@@ -39,6 +39,10 @@
 	App.Views.Task = Backbone.View.extend({
 		tagName: 'li',
 
+		initialize: function(){
+			this.model.on('change', this.render, this);
+		},
+
 		template: template('taskTemplate'),
 
 		events: {
