@@ -10,7 +10,13 @@
 		return _.template( $('#' + id).html() );
 	};
 
-	App.Models.Task = Backbone.Model.extend({});
+	App.Models.Task = Backbone.Model.extend({
+		validate: function(attrs){
+			if ( ! $.trim(attrs.title) ) {        //trim helps us cover multiple spaces on an empty title
+				return 'Please enter a valid title';
+			}
+		}
+	});
 
 	App.Collections.Tasks = Backbone.Collection.extend({
 		model: App.Models.Task
@@ -52,7 +58,12 @@
 
 		editTask: function(){
 			var newTitle = prompt("What would you like to change the task to?", this.model.get('title'))
-			this.model.set('title', newTitle);
+			
+
+			if (! newTitle) return; //We have the validate method, but ensuring no falsey values get through.
+
+
+			this.model.set('title', newTitle, {validate: true});
 		},
 
 		deleteTask: function(){
