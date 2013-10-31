@@ -42,7 +42,20 @@
 		template: template('taskTemplate'),
 
 		events: {
+			'click .edit': 'editTask',
+			'click .delete': 'deleteTask' 
+		},
 
+		editTask: function(){
+			var newTitle = prompt("What would you like to change the task to?", this.model.get('title'))
+			this.model.set('title', newTitle);
+		},
+
+		deleteTask: function(){
+			var confirm = alert("You sure you ain't cray?")
+			if (confirm) {
+				this.remove();
+			}
 		},
 
 		render: function(){
@@ -75,7 +88,6 @@
 		collection: tasksCollection
 	});
 
-	console.log(tasksView.el);
 	$('.task_list').html(tasksView.render().el)
 
 })();
