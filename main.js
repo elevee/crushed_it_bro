@@ -23,9 +23,14 @@
 
 	});
 
+	//Collection view - all of the tasks
 	App.Views.Tasks = Backbone.View.extend({
 		tagName: 'ul', 
 		
+		initialize: function(){
+			this.collection.on('add', this.addOne, this);
+		},
+
 		render: function() {
 			this.collection.each(this.addOne, this);
 
@@ -42,12 +47,14 @@
 
 	})
 
+	//Each task's individual view
 	App.Views.Task = Backbone.View.extend({
 		tagName: 'li',
 
 		initialize: function(){
 			this.model.on('change', this.render, this);
 			this.model.on('destroy', this.remove, this);
+			this.model.on('add', this.render, this);  //Is this necessary w/ the 'change' line?
 		},
 
 		template: template('taskTemplate'),
@@ -70,7 +77,6 @@
 		destroy: function(){
 			var confirmation = confirm("You sure you ain't cray?");
 			if (confirmation) {
-				console.log(confirmation);
 				this.model.destroy();
 				console.log(tasksCollection);
 			}
@@ -90,7 +96,28 @@
 	});
 
 
-	var tasksCollection = new App.Collections.Tasks([
+	App.Views.AddTask = Backbone.View.extend({
+		el: '#addTask',
+
+		events: {
+			'submit': 'submit'
+
+		},
+
+		submit: function(e){
+			e.preventDefault(); 
+			console.log("submitted");
+			var newTaskTitle = $(e.currentTarget).find('input[type=text]').val();
+			var task = new App.Models.Task({title: newTaskTitle}); 
+			this.collection.add(task);
+		}
+
+
+
+	});
+
+
+	window.tasksCollection = new App.Collections.Tasks([
 		{
 			title: "Go to the Apple store",
 			priority: 4
@@ -105,6 +132,10 @@
 		}
 		
 	]);
+
+	var addTaskView = new App.Views.AddTask({
+		collection: tasksCollection
+	})
 
 	var tasksView = new App.Views.Tasks({
 		collection: tasksCollection
