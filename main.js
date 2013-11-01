@@ -47,16 +47,17 @@
 
 		initialize: function(){
 			this.model.on('change', this.render, this);
+			this.model.on('destroy', this.remove, this);
 		},
 
 		template: template('taskTemplate'),
 
 		events: {
-			'click .edit': 'editTask',
-			'click .delete': 'deleteTask' 
+			'click .edit': 'edit',
+			'click .delete': 'destroy' 
 		},
 
-		editTask: function(){
+		edit: function(){
 			var newTitle = prompt("What would you like to change the task to?", this.model.get('title'))
 			
 
@@ -66,11 +67,17 @@
 			this.model.set('title', newTitle, {validate: true});
 		},
 
-		deleteTask: function(){
-			var confirm = alert("You sure you ain't cray?")
-			if (confirm) {
-				this.remove();
+		destroy: function(){
+			var confirmation = confirm("You sure you ain't cray?");
+			if (confirmation) {
+				console.log(confirmation);
+				this.model.destroy();
+				console.log(tasksCollection);
 			}
+		},
+
+		remove: function(){
+			this.$el.remove();
 		},
 
 		render: function(){
