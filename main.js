@@ -110,6 +110,7 @@
 			var newTaskTitle = $(e.currentTarget).find('input[type=text]').val();
 			var task = new App.Models.Task({title: newTaskTitle}); 
 			this.collection.add(task);
+			$(e.currentTarget).find('input[type=text]').val("");
 		}
 
 
