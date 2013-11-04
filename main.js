@@ -18,8 +18,9 @@
 		}
 	});
 
-	App.Collections.Tasks = Backbone.Collection.extend({
-		model: App.Models.Task
+	App.Collections.Tasks = Backbone.Firebase.Collection.extend({
+		model: App.Models.Task,
+		firebase: "https://elevee.firebaseio.com/"
 
 	});
 
@@ -77,12 +78,12 @@
 		destroy: function(){
 			var confirmation = confirm("You sure you ain't cray?");
 			if (confirmation) {
-				this.model.destroy();
-				console.log(tasksCollection);
+				tasksCollection.remove(this.model);
 			}
 		},
 
 		remove: function(){
+			console.log(this);	
 			this.$el.remove();
 		},
 
@@ -118,21 +119,23 @@
 	});
 
 
-	window.tasksCollection = new App.Collections.Tasks([
-		{
-			title: "Go to the Apple store",
-			priority: 4
-		},
-		{
-			title: "Get a brocut",
-			priority: 2
-		},
-		{
-			title: "Go to the bro bar",
-			priority: 5
-		}
+	window.tasksCollection = new App.Collections.Tasks(
+		// [
+		// {
+		// 	title: "Go to the Apple store",
+		// 	priority: 4
+		// },
+		// {
+		// 	title: "Get a brocut",
+		// 	priority: 2
+		// },
+		// {
+		// 	title: "Go to the bro bar",
+		// 	priority: 5
+		// }
+		// ]
 		
-	]);
+	);
 
 	var addTaskView = new App.Views.AddTask({
 		collection: tasksCollection
